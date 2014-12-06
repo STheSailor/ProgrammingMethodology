@@ -1,0 +1,74 @@
+import java.util.*;
+import java.io.*;
+import java.awt.event.*;
+import java.util.regex.*;
+
+public class ShoppingReceipt {
+	
+	public static void main(String[] args) {
+		ShoppingReceipt receipt = new ShoppingReceipt();
+		receipt.start();
+	}
+	
+	public ShoppingReceipt(){
+		
+	}
+   	
+	
+	public void start(){
+		loadBasket("Basket1.txt");
+		loadBasket("Basket2.txt");
+		computTotal();
+		printReceipt();	
+	}
+	
+	public void loadBasket(String basket) {
+		try {
+			BufferedReader rd = new BufferedReader(
+					new FileReader(basket));
+			while (true) {
+				String line = rd.readLine();
+				
+				Pattern p= Pattern.compile("at$");
+				Matcher m=p.matcher(line);
+				line=m.replaceAll(": ");
+				System.out.println(line);
+				if (line == null) break;
+				
+				Item item = parseLine(line);
+				//System.out.println( item.getAmountsBut()+ " " +item.getItemName()+ ": " 
+				//		+ item.getPrice());
+				//computTaxs();
+				//computTatal();
+			}
+			rd.close();
+		} catch (Exception e) {  
+            e.printStackTrace();  
+        }
+	}
+	
+	private Item parseLine(String line){
+		int amountsBuy= 1; 
+		String itemName= "book";     
+		double priceOfItem=3.00 ;       
+		boolean importedItem= false; 
+		return (new Item(amountsBuy,itemName, priceOfItem,importedItem));
+	}
+	
+	
+	
+	
+	
+	public void computTaxs(){
+		
+		
+	}
+	
+	public void computTotal(){
+		
+	}
+	
+	public void printReceipt(){
+		
+	}
+}

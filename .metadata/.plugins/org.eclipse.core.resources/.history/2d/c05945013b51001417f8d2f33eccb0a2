@@ -1,0 +1,31 @@
+
+public class ShoppingReceipt {
+	
+	
+	public static void main(String[] args) {
+		ShoppingReceipt recipt = new ShoppingReceipt();
+		recipt.start();
+	}
+	
+	public void start(){
+		loadBasket();
+		computTaxs();
+		computTotal();
+		printReceipt();	
+	}
+	public void loadBasket(){
+		
+	}
+	
+	public void computTaxs(){
+		
+	}
+	
+	public void computTotal(){
+		
+	}
+	
+	public void printReceipt(){
+		
+	}
+}

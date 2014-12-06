@@ -1,0 +1,49 @@
+ /*
+* File: Item.java
+* ----------------
+* Keeps track of all the information for one item you purchase,
+* including its name, its price,the number you buy, 
+* and if it is imported. 
+*/
+
+public class Item{
+	//Constructor
+	public Item (int number,String item, int price,boolean imported){
+		amountsBuy = number;
+		itemName = item;
+		priceOfItem = price;
+		importedItem = imported;
+	}
+	
+	public String getItemName(){
+		return itemName;
+	}
+	
+	public int getAmountsBut(){
+		return amountsBuy;
+	}
+	
+	public float getPrice(){
+		return priceOfItem;
+	}
+	
+	public boolean isImported(){
+		return importedItem;
+	}
+	
+	public String toString() {
+		if(importedItem){
+			return ( amountsBuy + " " + "imported" + itemName+ ":" + priceOfItem );
+		} else{
+			return ( amountsBuy + " "  + itemName+ ":" + priceOfItem );
+		}
+		
+	}
+	
+	
+	private String itemName; // the name of the item
+	private int amountsBuy;     // the amounts of items you purchase
+	private float priceOfItem;       
+	private boolean importedItem; // whether the item is imported  
+	
+}

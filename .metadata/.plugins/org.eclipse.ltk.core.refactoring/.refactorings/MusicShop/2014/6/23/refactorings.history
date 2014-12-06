@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<session version="1.0">
+<refactoring comment="Rename resource '/MusicShop/music-data' to 'music-data.txt'&#13;&#10;- Original element: 'music-data'" description="Rename resource 'music-data'" flags="7" id="org.eclipse.jdt.ui.rename.resource" input="music-data" name="music-data.txt" stamp="1402063344729" version="1.0"/>
+</session>

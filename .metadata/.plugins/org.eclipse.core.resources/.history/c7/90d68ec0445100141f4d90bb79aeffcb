@@ -1,0 +1,57 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+
+public class ShoppingReceipt {
+	
+   	
+	
+	public void start() {
+		loadBasket("Basket1.txt");
+		computTaxs();
+		computTotal();
+		printReceipt();	
+	}
+	
+	public void loadBasket(String basket) throws Exception{
+		try {
+			BufferedReader rd = new BufferedReader(
+					new FileReader(basket));
+			while (true) {
+				String line = rd.readLine();
+				if (line == null) break;
+				Item item = parseLine(line);
+				System.out.println( item.getAmountsBut()+ " " +item.getItemName() 
+						+ item.getPrice());
+			}
+			rd.close();
+		} catch(IOException ex) {
+			throw new Exception(ex);
+		}	
+	}
+	
+	private Item parseLine(String line){
+		int amountsBuy= 1; 
+		String itemName= "book";     
+		double priceOfItem=3.00 ;       
+		boolean importedItem= false; 
+		return (new Item(amountsBuy,itemName, priceOfItem,importedItem));
+	}
+	
+	
+	
+	
+	
+	public void computTaxs(){
+		
+	}
+	
+	public void computTotal(){
+		
+	}
+	
+	public void printReceipt(){
+		
+	}
+}

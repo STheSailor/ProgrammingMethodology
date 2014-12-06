@@ -1,0 +1,16 @@
+/*
+* File: InteractiveDrawFace.java
+* ------------------------------
+* This program draws GFaces on the screen, but allows the
+* use to modify their size and color.
+*/
+
+import acm.program.*;
+import acm.graphics.*;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class InteractiveDrawFace {
+
+}

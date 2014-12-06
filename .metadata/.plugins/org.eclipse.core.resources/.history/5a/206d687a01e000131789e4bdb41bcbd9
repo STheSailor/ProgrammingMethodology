@@ -1,0 +1,236 @@
+/*
+* File: Breakout.java
+* -------------------
+* This file will eventually implement the game of Breakout.
+*/
+
+import acm.graphics.*;
+import acm.program.*;
+import acm.util.*;
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+
+
+public class Breakout extends GraphicsProgram {
+	
+	/** Width and height of application window in pixels */
+	public static final int APPLICATION_WIDTH = 400;
+	public static final int APPLICATION_HEIGHT = 600;
+
+	/** Dimensions of game board (usually the same) */
+	private static final int WIDTH = APPLICATION_WIDTH;
+	private static final int HEIGHT = APPLICATION_HEIGHT;
+
+	/** Dimensions of the paddle */
+	private static final int PADDLE_WIDTH = 60;
+	private static final int PADDLE_HEIGHT = 10;
+
+	/** Offset of the paddle up from the bottom */
+	private static final int PADDLE_Y_OFFSET = 30;
+	
+	/** Number of bricks per row */
+	private static final int NBRICKS_PER_ROW = 10;
+
+	/** Number of rows of bricks */
+	private static final int NBRICK_ROWS = 10;
+
+	/** Separation between bricks */
+	private static final int BRICK_SEP = 4;
+	
+	/** Width of a brick */
+	private static final int BRICK_WIDTH =
+			(WIDTH - (NBRICKS_PER_ROW + 1) * BRICK_SEP) / NBRICKS_PER_ROW;
+	
+	/** Height of a brick */
+	private static final int BRICK_HEIGHT = 8;
+
+	/** Radius of the ball in pixels */
+	private static final int BALL_DIA = 10;
+
+	/** Offset of the top brick row from the top */
+	private static final int BRICK_Y_OFFSET = 70;
+	
+	/** Number of turns */
+	private static final int NTURNS = 3;
+	
+	/** Animation cycle delay */
+	private static final int DELAY = 2;
+	
+	public void run() {
+		setup();			
+		currentTimes=NTURNS;
+		while(!gameOver()){
+			moveBall();
+			checkForCollisions();
+			
+			if(currentTimes<=0){
+				break;
+			}
+			
+			pause(DELAY);
+			//if(isBricksClean()) break;
+			//i--;
+		}
+	}
+	
+	private void setup(){
+	    gameboard = new GRect(WIDTH ,HEIGHT);
+		add(gameboard);
+				
+		setupBricks();
+		setupPaddle();		
+		
+		addMouseListeners();
+		pause(DELAY);
+	}
+	
+	private void setupBricks(){
+		for(int i=0;i<NBRICK_ROWS;i++){
+			for(int j=0;j<NBRICKS_PER_ROW;j++){
+				int x = BRICK_WIDTH*j+BRICK_SEP*(j+1);
+				int y = BRICK_Y_OFFSET + i*(BRICK_HEIGHT+BRICK_SEP);
+				brick = new GRect(BRICK_WIDTH, BRICK_HEIGHT);
+				brick.setFilled(true);
+				if(i<2){
+					brick.setColor(Color.red);
+				}else if(i<4){
+					brick.setColor(Color.orange);
+				}else if (i<6){
+					brick.setColor(Color.yellow);
+				}else if (i<8){
+					brick.setColor(Color.green);
+				}else if (i<10){
+					brick.setColor(Color.cyan);
+				}
+				add(brick,x, y);							
+			}
+		}
+	}
+	
+	private void setupPaddle(){
+		paddle = new GRect((WIDTH- PADDLE_WIDTH)/2,HEIGHT-(PADDLE_Y_OFFSET+PADDLE_HEIGHT),
+				PADDLE_WIDTH,PADDLE_HEIGHT );
+		paddle.setFilled(true);
+		add(paddle);
+	}
+	
+	// Called on mouse press to record the coordinates of the click */
+	public void mousePressed(MouseEvent e) {
+		// GPoint has X and Y coordinate
+		last = new GPoint(e.getPoint());
+		gobj = getElementAt(last);
+	}
+	
+	// Called on mouse drag to reposition the object 
+	public void mouseDragged(MouseEvent e) {
+		if (gobj == paddle) {
+			gobj.move(e.getX() - last.getX(), e.getY() - e.getY());
+			last = new GPoint(e.getPoint());
+			if (e.getX()<0 ){
+				paddle.setLocation(0,paddle.getY());
+			}if(e.getX()+PADDLE_WIDTH>WIDTH){
+				paddle.setLocation(WIDTH-PADDLE_WIDTH,paddle.getY());
+			}
+
+		}
+	}
+	
+	public void mouseClicked(MouseEvent e) {
+		if (ball == null) {
+			vx = rgen.nextDouble(1.0, 3.0);
+			if (rgen.nextBoolean(0.5)) vx = -vx;
+			vy = 3.0;
+			ball = new GOval(WIDTH/2.5,HEIGHT/2,BALL_DIA,BALL_DIA);
+			ball.setFilled(true);
+			add(ball);
+		}
+	}
+	
+	private void moveBall(){
+		if (ball != null) {
+			ball.move(vx,vy);
+		}
+	}
+	
+	private void checkForCollisions(){
+		checkWallCollisions();
+		GObject collider = getCollidingObject();
+		if(collider!=gameboard){
+			if(collider==paddle){
+				bounceOffPaddle();
+			}else if(collider != null){
+				remove(collider);
+				vy=-vy;
+			
+			}
+		}
+	}
+	
+	private void checkWallCollisions(){	
+		if (ball!=null&&((ball.getY()<0))) {
+			vy=-vy;		
+		}if (ball!=null&&(ball.getY() > HEIGHT )){
+			remove(ball);
+			ball=null;
+			currentTimes--;
+		}if(ball!=null&&((ball.getX()<0)||((ball.getX()+BALL_DIA)>WIDTH))){
+			vx=-vx;
+		}
+	}
+	
+
+	
+	private GObject getCollidingObject(){
+		GObject obj =null;
+	    if(ball!=null){
+			double x = ball.getX();
+			double y = ball.getY();
+				if((obj=getElementAt(x, y))!=null){
+					obj=getElementAt(x, y);
+				}else if((obj=getElementAt(x+BALL_DIA, y))!=null){
+					obj=getElementAt(x+BALL_DIA, y);
+				}else if((obj=getElementAt(x, y+BALL_DIA))!=null){
+					obj=getElementAt(x, y+BALL_DIA);
+				}else {
+					obj=getElementAt(x+BALL_DIA, y+BALL_DIA);
+				}
+	    }
+	    return obj;
+		
+	}
+
+	
+    private void bounceOffPaddle()
+    {
+        double dy = (ball.getY() + BALL_DIA) - paddle.getY();
+        ball.move(0,-dy);
+        
+        vy = -vy;
+    }
+	private boolean gameOver(){
+		if(brick==null){
+			GRect winboard = new GRect(WIDTH/2,HEIGHT/2,30,40);
+			GLabel win = new GLabel("You win!",WIDTH/2,HEIGHT/2);
+			add(winboard);
+			add(win);
+		}
+		
+		return (brick==null);
+	}
+	
+	
+
+	
+	private GObject gobj;          /* The object being dragged */
+	private GPoint last;           /* The last mouse position */
+	private GRect paddle;
+	private GOval ball;
+	private GRect brick;
+	private GRect gameboard;
+	private double vx,vy;
+	private RandomGenerator rgen = RandomGenerator.getInstance();
+	private int currentTimes;
+	private boolean hitTheBottom;
+
+}

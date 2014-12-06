@@ -1,0 +1,57 @@
+import acm.graphics.*;
+import acm.gui.IntField;
+import acm.program.*;
+import acm.util.*;
+
+import java.applet.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+
+public class BreakOutVer2 extends ConsoleProgram {
+	
+	public void init(){
+		setLayout(new GridLayout(1,2));
+		
+		bCanvas = new GCanvas();
+		add(bCanvas);
+		
+		createController();
+	}
+	
+	private void createController(){
+		add(new JLabel("Lives:"), SOUTH);
+		livesField=new IntField(currentTimes);
+		
+	
+		add(livesField,SOUTH);
+		livesField.addActionListener(this);
+		
+		startButton = new JButton("Start");
+		add(startButton,SOUTH);
+		
+		restartButton = new JButton("Restart");
+		add(restartButton,SOUTH);
+	}
+		
+	private GCanvas bCanvas;
+	
+	private GObject gobj;          /* 被拉动的物体 */
+	private GPoint last;           /* 鼠标最后点击的位置 */
+	private GRect paddle;          /*底部移动挡板*/
+	private GOval ball;            /*拆墙的小球*/
+	private GRect brick;           /*砖块（组成墙体）*/
+	private GRect gameboard;       /*游戏画板*/
+	
+	private double vx,vy;          /*小球速度*/
+	private RandomGenerator rgen = RandomGenerator.getInstance();   //随机数生成器
+	private int currentTimes;                                       //现在轮数（每次三轮游戏机会）
+	private int number_of_bricks;
+
+	private JButton startButton;
+	private IntField livesField;
+	private JButton restartButton;
+	private GCompound box;
+}

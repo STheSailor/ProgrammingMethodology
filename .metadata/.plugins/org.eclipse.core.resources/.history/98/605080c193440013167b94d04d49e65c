@@ -1,0 +1,10 @@
+/*
+ * GraphicNumbers.java
+ * -------------------
+ * This program shows how to use ArrayList of graphic objects.
+ */
+import acm.program.*;
+
+public class GraphicNumbers {
+
+}
